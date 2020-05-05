@@ -6,10 +6,10 @@ env:
   CMAKE_BUILD_TYPE: "RELWITHDEBINFO"
 overrides:
   AliRoot:
-    version: "%(tag_basename)s"
+    version: "%(tag_basename)s_GEANT4"
     tag: v5-09-02g
   AliPhysics:
-    version: "%(tag_basename)s"
+    version: "%(tag_basename)s_GEANT4"
     tag: v5-09-02g-01
 ---
 # To be used with aliBuild option `--defaults prod-latest`.

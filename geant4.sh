@@ -1,12 +1,14 @@
 package: GEANT4
 version: "%(tag_basename)s"
-tag: v4.10.01.p03-alice1
-source: https://github.com/alisw/geant4
+tag: "v10.4.2-alice3"
+source: https://github.com/alisw/GEANT4
 requires:
   - "GCC-Toolchain:(?!osx)"
 build_requires:
   - CMake
   - "Xcode:(osx.*)"
+prepend_path:
+  ROOT_INCLUDE_PATH: "$GEANT4_ROOT/include:$GEANT4_ROOT/include/Geant4"
 incremental_recipe: |
   make ${JOBS:+-j$JOBS} install
   mkdir -p $INSTALLROOT/etc/modulefiles && rsync -a --delete etc/modulefiles/ $INSTALLROOT/etc/modulefiles
@@ -25,24 +27,29 @@ env:
 ---
 #!/bin/bash -e
 
-cmake $SOURCEDIR                                    \
-  -DGEANT4_INSTALL_DATA_TIMEOUT=1500                \
-  -DCMAKE_CXX_FLAGS="-fPIC"                         \
-  -DCMAKE_INSTALL_PREFIX:PATH="$INSTALLROOT"        \
-  -DCMAKE_INSTALL_LIBDIR="lib"                      \
-  -DCMAKE_BUILD_TYPE=RelWithDebInfo                 \
-  -DGEANT4_BUILD_TLS_MODEL:STRING="global-dynamic"  \
-  -DGEANT4_ENABLE_TESTING=OFF                       \
-  -DBUILD_SHARED_LIBS=ON                            \
-  -DGEANT4_INSTALL_EXAMPLES=OFF                     \
-  -DCLHEP_ROOT_DIR:PATH="$CLHEP_ROOT"               \
-  -DGEANT4_BUILD_MULTITHREADED=OFF                  \
-  -DCMAKE_STATIC_LIBRARY_CXX_FLAGS="-fPIC"          \
-  -DCMAKE_STATIC_LIBRARY_C_FLAGS="-fPIC"            \
-  -DGEANT4_USE_G3TOG4=ON                            \
-  -DGEANT4_INSTALL_DATA=ON                          \
-  -DGEANT4_USE_SYSTEM_EXPAT=OFF                     \
-  ${CXXSTD:+-DCMAKE_CXX_STANDARD=$CXXSTD}           \
+[[ $CXXSTD > 14 ]] && CXXSTD=14 || true  # Only C++14 is supported at the moment
+
+# if this variable is not defined default it to OFF
+: ${GEANT4_BUILD_MULTITHREADED:=OFF}
+
+cmake $SOURCEDIR                                             \
+  -DGEANT4_INSTALL_DATA_TIMEOUT=2000                         \
+  -DCMAKE_CXX_FLAGS="-fPIC"                                  \
+  -DCMAKE_INSTALL_PREFIX:PATH="$INSTALLROOT"                 \
+  -DCMAKE_INSTALL_LIBDIR="lib"                               \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo                          \
+  -DGEANT4_BUILD_TLS_MODEL:STRING="global-dynamic"           \
+  -DGEANT4_ENABLE_TESTING=OFF                                \
+  -DBUILD_SHARED_LIBS=ON                                     \
+  -DGEANT4_INSTALL_EXAMPLES=OFF                              \
+  -DCLHEP_ROOT_DIR:PATH="$CLHEP_ROOT"                        \
+  -DGEANT4_BUILD_MULTITHREADED="$GEANT4_BUILD_MULTITHREADED" \
+  -DCMAKE_STATIC_LIBRARY_CXX_FLAGS="-fPIC"                   \
+  -DCMAKE_STATIC_LIBRARY_C_FLAGS="-fPIC"                     \
+  -DGEANT4_USE_G3TOG4=ON                                     \
+  -DGEANT4_INSTALL_DATA=ON                                   \
+  -DGEANT4_USE_SYSTEM_EXPAT=OFF                              \
+  ${CXXSTD:+-DCMAKE_CXX_STANDARD=$CXXSTD}                    \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 make ${JOBS+-j $JOBS}
@@ -90,6 +97,8 @@ setenv G4NEUTRONXSDATA $G4NEUTRONXSDATA
 setenv G4SAIDXSDATA $G4SAIDXSDATA
 setenv G4ENSDFSTATEDATA $G4ENSDFSTATEDATA
 prepend-path PATH \$::env(GEANT4_ROOT)/bin
+prepend-path ROOT_INCLUDE_PATH \$::env(GEANT4_ROOT)/include/Geant4
+prepend-path ROOT_INCLUDE_PATH \$::env(GEANT4_ROOT)/include
 prepend-path LD_LIBRARY_PATH \$::env(GEANT4_ROOT)/lib
 $([[ ${ARCHITECTURE:0:3} == osx ]] && echo "prepend-path DYLD_LIBRARY_PATH \$::env(GEANT4_ROOT)/lib")
 EoF
