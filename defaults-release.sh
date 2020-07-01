@@ -7,10 +7,10 @@ env:
 overrides:
   # Pinpoint AliRoot/AliPhysics
   AliRoot:
-    version: "%(tag_basename)s"
+    version: "%(tag_basename)s_GEANT4"
     tag: v5-09-02g
   AliPhysics:
-    version: "%(tag_basename)s"
+    version: "%(tag_basename)s_GEANT4"
     tag: v5-09-02g-01
 ---
 # This file is included in any build recipe and it's only used to set
