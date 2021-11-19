@@ -11,7 +11,7 @@ overrides:
 
   # Pinpoint AliRoot/AliPhysics
   AliRoot:
-    version: "%(tag_basename)s"
+    version: "%(tag_basename)s_GEANT4"
     tag: v5-09-54m
     requires:
       - ROOT
@@ -22,7 +22,7 @@ overrides:
       - Vc
       - AliEn-ROOT-Legacy
   AliPhysics:
-    version: "%(tag_basename)s"
+    version: "%(tag_basename)s_GEANT4"
     tag: v5-09-54m-01
   XRootD:
     tag: v3.3.6-alice2
@@ -52,9 +52,9 @@ overrides:
     version: "v3-6-p6-inclxx-biasing-p5"
     tag: "v3-6-p6-inclxx-biasing-p5"
   GEANT4:
-    source: https://github.com/alisw/geant4.git
-    version: "v10.4.2-alice3"
-    tag: "v10.4.2-alice3"
+    source: https://github.com/mpuccio/geant4.git
+    version: "v10.4.2-alice4"
+    tag: "v10.4.2-alice4"
   vgm:
     version: "v4-4"
     tag: "v4-4"
