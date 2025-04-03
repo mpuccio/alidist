@@ -1,6 +1,6 @@
 package: O2Physics
 version: "%(tag_basename)s"
-tag: "daily-20250331-0000"
+tag: "CEFP2020v0"
 requires:
   - O2
   - ONNXRuntime
@@ -12,7 +12,7 @@ build_requires:
   - CMake
   - ninja
   - alibuild-recipe-tools
-source: https://github.com/AliceO2Group/O2Physics
+source: https://github.com/mpuccio/O2Physics
 incremental_recipe: |
   cmake --build . -- ${JOBS:+-j$JOBS} install
   mkdir -p $INSTALLROOT/etc/modulefiles && rsync -a --delete etc/modulefiles/ $INSTALLROOT/etc/modulefiles
